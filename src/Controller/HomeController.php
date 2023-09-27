@@ -2,16 +2,14 @@
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="homepage")
-     */
-    public function index()
-    {
-        return $this->render('default/index.html.twig');
-    }
+	#[Route('/', name:'app_home')]
+	public function index()
+	{
+		return $this->render('base.html.twig');
+	}
 }
