@@ -2,93 +2,92 @@
 
 namespace App\Controller;
 
-use AppBundle\Entity\Task;
-use AppBundle\Form\TaskType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use App\Repository\TaskRepository;
+use App\Entity\Task;
+use App\Form\TaskType;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+#[Route("/task")]
 class TaskController extends AbstractController
 {
-    /**
-     * @Route("/tasks", name="task_list")
-     */
-    public function listAction()
-    {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->findAll()]);
-    }
 
-    /**
-     * @Route("/tasks/create", name="task_create")
-     */
-    public function createAction(Request $request)
-    {
-        $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
+	#[Route("/", name:"task_list")]
+	public function index(TaskRepository $taskRepository) : Response
+	{
+		return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+	}
 
-        $form->handleRequest($request);
+	#[Route("/create", name:"task_create")]
+	public function new(Request $request, TaskRepository $taskRepository) : Response
+	{
+		$task = new Task();
+		$form = $this->createForm(TaskType::class, $task);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+		$form->handleRequest($request);
 
-            $em->persist($task);
-            $em->flush();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$taskRepository->save($task, true);
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+			$this->addFlash('success', 'Task has successfully been created.');
 
-            return $this->redirectToRoute('task_list');
-        }
+			return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+		}
 
-        return $this->render('task/create.html.twig', ['form' => $form->createView()]);
-    }
+		return $this->render('task/create.html.twig', [
+			'form' => $form,
+			'task' => $task
+		]);
+	}
 
-    /**
-     * @Route("/tasks/{id}/edit", name="task_edit")
-     */
-    public function editAction(Task $task, Request $request)
-    {
-        $form = $this->createForm(TaskType::class, $task);
+	#[Route("/{id}/edit", name:"task_edit")]
+	public function edit(Task $task, Request $request, TaskRepository $taskRepository) : Response
+	{
+		$form = $this->createForm(TaskType::class, $task);
 
-        $form->handleRequest($request);
+		$form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$taskRepository->save($task, true);
 
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
+			$this->addFlash('success', 'Task has successfully been edited.');
 
-            return $this->redirectToRoute('task_list');
-        }
+			return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+		}
 
-        return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(),
-            'task' => $task,
-        ]);
-    }
+		return $this->render('task/edit.html.twig', [
+			'form' => $form->createView(),
+			'task' => $task,
+		]);
+	}
 
-    /**
-     * @Route("/tasks/{id}/toggle", name="task_toggle")
-     */
-    public function toggleTaskAction(Task $task)
-    {
-        $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+	#[Route("/{id}/toggle", name:"task_toggle")]
+	public function toggleTaskAction(Task $task, TaskRepository $taskRepository) : Response
+	{
+		//TODO: peut être le changer par juste isDone mais c'est marrant
+		$task->setIsDone(!$task->isIsDone());
+		$taskRepository->save($task, true);
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+		if ($task->isIsDone()) {
+			$this->addFlash('success', sprintf('Task %s has been finished.', $task->getTitle()));
+		} else {
+			$this->addFlash('warning', sprintf('Task %s has return to unfinished status', $task->getTitle()));
+		}
 
-        return $this->redirectToRoute('task_list');
-    }
+		return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+	}
 
-    /**
-     * @Route("/tasks/{id}/delete", name="task_delete")
-     */
-    public function deleteTaskAction(Task $task)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+	#[Route("/{id}/delete", name:"task_delete")]
+	public function deleteTaskAction(Request $request, Task $task, TaskRepository $taskRepository) : Response
+	{
+		if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
+			$taskRepository->remove($task, true);
+		}
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+		$this->addFlash('success', 'Task has successfully been deleted.');
 
-        return $this->redirectToRoute('task_list');
-    }
+		return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+	}
 }
