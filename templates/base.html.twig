@@ -139,6 +139,7 @@
 						{% if is_granted("ROLE_ADMIN") %}
 							<a href="{{ path('user_create') }}" class="btn btn-primary">Create user</a>
 						{% endif %}
+						<a href="{{ path('task_list') }}" class="btn btn-primary">Show tasks</a>
 					{% else %}
 						<a href="{{ path('app_login') }}" class="btn btn-success">Login</a>
 						<a href="{{ path('app_register') }}" class="btn btn-primary">Register</a>
