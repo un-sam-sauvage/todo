@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -24,6 +25,12 @@ class Task
 
     #[ORM\Column]
     private ?bool $isDone = null;
+
+    public function __construct()
+    {
+        $this->created_at = new DateTimeImmutable();
+        $this->isDone = false;
+    }
 
     public function getId(): ?int
     {
@@ -66,7 +73,7 @@ class Task
         return $this;
     }
 
-    public function isIsDone(): ?bool
+    public function isDone(): ?bool
     {
         return $this->isDone;
     }
