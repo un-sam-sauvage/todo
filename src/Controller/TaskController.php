@@ -66,11 +66,10 @@ class TaskController extends AbstractController
 	#[Route("/{id}/toggle", name:"task_toggle")]
 	public function toggleTaskAction(Task $task, TaskRepository $taskRepository) : Response
 	{
-		//TODO: peut être le changer par juste isDone mais c'est marrant
-		$task->setIsDone(!$task->isIsDone());
+		$task->setIsDone(!$task->isDone());
 		$taskRepository->save($task, true);
 
-		if ($task->isIsDone()) {
+		if ($task->isDone()) {
 			$this->addFlash('success', sprintf('Task %s has been finished.', $task->getTitle()));
 		} else {
 			$this->addFlash('warning', sprintf('Task %s has return to unfinished status', $task->getTitle()));
