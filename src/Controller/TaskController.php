@@ -66,7 +66,7 @@ class TaskController extends AbstractController
 	#[Route("/{id}/toggle", name:"task_toggle")]
 	public function toggleTaskAction(Task $task, TaskRepository $taskRepository) : Response
 	{
-		//TODO: peut être le changer par juste isDone mais c'est marrant
+
 		$task->setIsDone(!$task->isDone());
 		$taskRepository->save($task, true);
 
