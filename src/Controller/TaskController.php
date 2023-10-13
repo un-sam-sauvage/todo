@@ -7,6 +7,7 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,6 +30,7 @@ class TaskController extends AbstractController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$task->setAuthor($this->getUser());
 			$taskRepository->save($task, true);
 
 			$this->addFlash('success', 'Task has successfully been created.');
@@ -63,10 +65,9 @@ class TaskController extends AbstractController
 		]);
 	}
 
-	#[Route("/{id}/toggle", name:"task_toggle")]
+	#[Route("/{id}/toggle", name:"task_toggle", methods: ['POST'])]
 	public function toggleTaskAction(Task $task, TaskRepository $taskRepository) : Response
 	{
-
 		$task->setIsDone(!$task->isDone());
 		$taskRepository->save($task, true);
 
@@ -76,10 +77,13 @@ class TaskController extends AbstractController
 			$this->addFlash('warning', sprintf('Task %s has return to unfinished status', $task->getTitle()));
 		}
 
-		return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+		return new JsonResponse([
+			"msg" => "task has been toggled",
+			"newState" => $task->isDone()
+		]);
 	}
 
-	#[Route("/{id}/delete", name:"task_delete")]
+	#[Route("/{id}/delete", name:"task_delete", methods: ['DELETE'])]
 	public function deleteTaskAction(Request $request, Task $task, TaskRepository $taskRepository) : Response
 	{
 		if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
