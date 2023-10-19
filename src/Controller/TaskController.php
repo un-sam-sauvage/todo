@@ -18,7 +18,14 @@ class TaskController extends AbstractController
 	#[Route("/", name:"task_list")]
 	public function index(TaskRepository $taskRepository) : Response
 	{
-		return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findAll()]);
+		//si l'utilisateur est connecté
+		if ($this->getUser()) {
+			return $this->render('task/list.html.twig', [
+				'tasks' => $taskRepository->findAll()
+			]);
+		} else {
+			return $this->render("security/login.html.twig");
+		}
 	}
 
 	#[Route("/create", name:"task_create")]
@@ -83,15 +90,22 @@ class TaskController extends AbstractController
 		]);
 	}
 
-	#[Route("/{id}/delete", name:"task_delete", methods: ['DELETE'])]
+	#[Route("/{id}", name:"task_delete", methods: ['DELETE'])]
 	public function deleteTaskAction(Request $request, Task $task, TaskRepository $taskRepository) : Response
 	{
-		if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
+		$params = json_decode($request->getContent(), true);
+		if ($this->isCsrfTokenValid('delete'.$task->getId(), $params["_token"])) {
 			$taskRepository->remove($task, true);
+		} else {
+			return new JsonResponse([
+				"success" => false,
+				"msg" => "invalid token"
+			]);
 		}
 
-		$this->addFlash('success', 'Task has successfully been deleted.');
-
-		return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
+		return new JsonResponse([
+			"success" => true,
+			"msg" => "task has been successfully deleted"
+		]);
 	}
 }

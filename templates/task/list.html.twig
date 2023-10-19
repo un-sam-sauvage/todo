@@ -19,18 +19,18 @@
 	<a href="{{ path('task_create') }}" class="btn btn-info pull-right">Create task</a>
 	<div class="row">
 		{% for task in tasks %}
-		<div class="col-sm-4 col-lg-4 col-md-4 card">
+		<div class="col-sm-4 col-lg-4 col-md-4 card" id="task_{{ task.id }}">
 			<div class="thumbnail">
 				<h4 class="card-title"><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
 				<p class="card-text">{{ task.content }}</p>
 				<div class="card-links">
+					{% if is_granted("ROLE_ADMIN") or app.user == task.author %}
 					<a href="{{ path('task_edit', {'id': task.id }) }}" class="btn btn-warning btn-sm">Edit</a>
 						<button class="btn btn-success btn-sm pull-right btn-toggle" data-id="{{ task.id }}">
 							{% if not task.isDone %}Mark as done{% else %}Mark as unfinished{% endif %}
 						</button>
-					<form action="{{ path('task_delete', {'id' : task.id }) }}">
-						<button class="btn btn-danger btn-sm pull-right">Delete</button>
-					</form>
+						<button class="btn btn-danger btn-sm pull-right btn-delete-task" data-task-id="{{ task.id }}" data-crsf="{{ csrf_token('delete' ~ task.id) }}">Delete</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -44,6 +44,7 @@
 		window.addEventListener("DOMContentLoaded", () => {
 			document.querySelectorAll(".btn-toggle").forEach(btn => {
 				btn.addEventListener("click", btnClicked => {
+					setWaiting(true);
 					let btnId = btnClicked.target.getAttribute("data-id");
 					fetch(btnId + "/toggle", {
 						method: "POST",
@@ -54,9 +55,37 @@
 						return res.json()
 					}).then(data => {
 						btnClicked.target.textContent = (data.newState ? "Mark as unfinished" : "Mark as done");
+						btnClicked.target.classList.remove((data.newState ? "btn-success" : "btn-secondary"));
+						btnClicked.target.classList.add((data.newState ? "btn-secondary" : "btn-success"));
+						setWaiting(false);
 					})
 				})
 			})
+			document.querySelectorAll(".btn-delete-task").forEach(btn => {
+				btn.addEventListener("click", btnClicked => {
+					if (confirm("Are you sure to delete this taks ?")) {
+						const taskId = btnClicked.target.getAttribute("data-task-id");
+						const crsfToken = btnClicked.target.getAttribute("data-crsf");
+						fetch(taskId, {
+							method: "DELETE",
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								_token: crsfToken
+							})
+						}).then(res => {
+							return res.json()
+						}).then(data => {
+							console.log(data);
+							if (data.success) {
+								document.getElementById("task_" + taskId).remove();
+							}
+						})
+					}
+				})
+			})
 		})
+
 	</script>
 {% endblock %}

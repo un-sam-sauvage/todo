@@ -16,7 +16,11 @@ class UserController extends AbstractController
 	#[Route('/', name:'user_list', methods: ['GET'])]
 	public function index(UserRepository $userRepository) : Response
 	{
-		return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
+		if ($this->getUser() && in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+			return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
+		} else {
+			return $this->render('security/login.html.twig');
+		}
 	}
 
 	#[Route('/create', name:'user_create')]
