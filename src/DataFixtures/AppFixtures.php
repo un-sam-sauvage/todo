@@ -41,6 +41,14 @@ class AppFixtures extends Fixture
 			$task->setAuthor((($i % 2 == 0) ? $userAdmin : $user));
 			$manager->persist($task);
 		}
+
+		for ($i=0; $i < 3; $i++) { 
+			$task = new Task();
+			$task->setTitle("Ano Task n°". $i);
+			$task->setContent("Ano Content n°". $i);
+			$task->setAuthor($anonymous);
+			$manager->persist($task);
+		}
 		$manager->flush();
 	}
 }
