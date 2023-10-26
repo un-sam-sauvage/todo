@@ -20,9 +20,15 @@ class TaskController extends AbstractController
 	{
 		//si l'utilisateur est connecté
 		if ($this->getUser()) {
-			return $this->render('task/list.html.twig', [
-				'tasks' => $taskRepository->findAll()
-			]);
+			if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+				return $this->render('task/list.html.twig', [
+					'tasks' => $taskRepository->findAll()
+				]);
+			} else {
+				return $this->render('task/list.html.twig', [
+					'tasks' => $taskRepository->findBy(["author" => $this->getUser()])
+				]);
+			}
 		} else {
 			return $this->render("security/login.html.twig");
 		}
