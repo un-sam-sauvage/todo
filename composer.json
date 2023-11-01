@@ -23,7 +23,9 @@
         "symfony/twig-bundle": "6.3.*",
         "symfony/validator": "6.3.*",
         "symfony/yaml": "6.3.*",
-        "symfonycasts/verify-email-bundle": "^1.14"
+        "symfonycasts/verify-email-bundle": "^1.14",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     },
     "config": {
         "allow-plugins": {

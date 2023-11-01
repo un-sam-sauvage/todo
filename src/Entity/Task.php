@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -30,10 +32,14 @@ class Task
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'Task')]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->created_at = new DateTimeImmutable();
         $this->isDone = false;
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,6 +103,33 @@ class Task
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): static
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeTask($this);
+        }
 
         return $this;
     }

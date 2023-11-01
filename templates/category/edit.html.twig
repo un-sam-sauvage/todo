@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<div id="form-container">
+		<h1>Edit Category</h1>
+		{{ form_start(form, {'action' : path('app_category_edit', { 'id' : category.id })}) }}
+		{{ form_widget(form) }}
+
+		<button type="submit" class="btn btn-success pull-right">Edit</button>
+		{{ form_end(form) }}
+
+		<a href="{{ path('app_category_list') }}" class="btn btn-primary">Back to categories list</a>
+	</div>
+{% endblock %}

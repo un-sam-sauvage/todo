@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Security\AccessVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,8 @@ class UserController extends AbstractController
 	#[Route('/', name:'user_list', methods: ['GET'])]
 	public function index(UserRepository $userRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_ADMIN);
+
 		if ($this->getUser() && in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
 			return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
 		} else {
@@ -26,6 +29,8 @@ class UserController extends AbstractController
 	#[Route('/create', name:'user_create')]
 	public function new(Request $request, UserRepository $userRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_ADMIN);
+
 		$user = new User();
 		$form = $this->createForm(UserType::class, $user);
 
@@ -48,6 +53,8 @@ class UserController extends AbstractController
 	#[Route('/{id}/edit', name:'user_edit', methods: ['GET', 'POST'])]
 	public function edit(User $user, Request $request, UserRepository $userRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_ADMIN);
+
 		$form = $this->createForm(UserType::class, $user);
 
 		$form->handleRequest($request);
@@ -68,6 +75,8 @@ class UserController extends AbstractController
 	#[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
 	public function delete(Request $request, User $user, UserRepository $userRepository): Response
 	{
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_ADMIN);
+
 		if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
 			$userRepository->remove($user, true);
 		}

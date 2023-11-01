@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategoryController!{% endblock %}
+{% block stylesheets %}
+	<style>
+		#categoryContainer {
+			display: flex;
+			gap: 5px;
+			margin: 2% auto;
+			width: 90%
+		}
+		.category {
+			border-radius: 9px;
+			padding: 10px;
+			text-decoration: none;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+	<h1>Categories List</h1>
+	<div id="categoryContainer">
+		{% for category in categories %}
+			<a href="{{ path('app_category_edit', {'id' : category.id }) }}" class="category" style="background-color:{{category.color}}">{{ category.name }}</a>
+		{% endfor %}
+	</div>
+	<a href="{{ path('app_category_create')}}" class="btn btn-primary">Add a category</a>
+</div>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		window.addEventListener("DOMContentLoaded", () => {
+			document.querySelectorAll(".category").forEach(category => {
+				let color = window.getComputedStyle(category, "").getPropertyValue("background-color");
+				let colorArray = color.split(",");
+				let colorArrayClean = [];
+				colorArray.forEach(c => {
+					colorArrayClean.push(parseInt(c.replace(/\D+/g, "")));
+				})
+				let colorCalculed = Math.round(((colorArrayClean[0] * 299) + (colorArrayClean[1] * 587) + (colorArrayClean[2] * 114)) / 1000);
+				let textColor = ((colorCalculed > 125) ? 'black' : 'white');
+				category.style.color = textColor;
+			});
+		})
+	
+	</script>
+{% endblock %}

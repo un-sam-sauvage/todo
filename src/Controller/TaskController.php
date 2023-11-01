@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Repository\TaskRepository;
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Security\AccessVoter;
+use App\Security\TaskVoter;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,25 +20,25 @@ class TaskController extends AbstractController
 	#[Route("/", name:"task_list")]
 	public function index(TaskRepository $taskRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_LOGGED);
+
 		//si l'utilisateur est connecté
-		if ($this->getUser()) {
-			if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
-				return $this->render('task/list.html.twig', [
-					'tasks' => $taskRepository->findAll()
-				]);
-			} else {
-				return $this->render('task/list.html.twig', [
-					'tasks' => $taskRepository->findBy(["author" => $this->getUser()])
-				]);
-			}
+		if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+			return $this->render('task/list.html.twig', [
+				'tasks' => $taskRepository->findAll()
+			]);
 		} else {
-			return $this->render("security/login.html.twig");
+			return $this->render('task/list.html.twig', [
+				'tasks' => $taskRepository->findBy(["author" => $this->getUser()])
+			]);
 		}
 	}
 
 	#[Route("/create", name:"task_create")]
 	public function new(Request $request, TaskRepository $taskRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_LOGGED);
+
 		$task = new Task();
 		$form = $this->createForm(TaskType::class, $task);
 
@@ -60,6 +62,8 @@ class TaskController extends AbstractController
 	#[Route("/{id}/edit", name:"task_edit")]
 	public function edit(Task $task, Request $request, TaskRepository $taskRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(TaskVoter::VIEW, $task);
+
 		$form = $this->createForm(TaskType::class, $task);
 
 		$form->handleRequest($request);
@@ -73,7 +77,7 @@ class TaskController extends AbstractController
 		}
 
 		return $this->render('task/edit.html.twig', [
-			'form' => $form->createView(),
+			'form' => $form,
 			'task' => $task,
 		]);
 	}
@@ -81,6 +85,8 @@ class TaskController extends AbstractController
 	#[Route("/{id}/toggle", name:"task_toggle", methods: ['POST'])]
 	public function toggleTaskAction(Task $task, TaskRepository $taskRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(TaskVoter::VIEW, $task);
+
 		$task->setIsDone(!$task->isDone());
 		$taskRepository->save($task, true);
 
@@ -99,6 +105,8 @@ class TaskController extends AbstractController
 	#[Route("/{id}", name:"task_delete", methods: ['DELETE'])]
 	public function deleteTaskAction(Request $request, Task $task, TaskRepository $taskRepository) : Response
 	{
+		$this->denyAccessUnlessGranted(TaskVoter::VIEW, $task);
+
 		$params = json_decode($request->getContent(), true);
 		if ($this->isCsrfTokenValid('delete'.$task->getId(), $params["_token"])) {
 			$taskRepository->remove($task, true);
