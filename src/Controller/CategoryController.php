@@ -27,7 +27,7 @@ class CategoryController extends AbstractController
 
 	#[Route('/create', name:"_create", methods: ['GET', 'POST'])]
 	public function createCategory(Request $request, CategoryRepository $categoryRepository): Response {
-		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_LOGGED);
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_ADMIN);
 
 		$category = new Category();
 		$form = $this->createForm(CategoryType::class, $category);
@@ -40,7 +40,7 @@ class CategoryController extends AbstractController
 			}
 			$categoryRepository->save($category, true);
 			$this->addFlash("success", 'Category has successfully been created');
-			return $this->redirectToRoute('app_category_list', [], Response::HTTP_SEE_OTHER);
+			return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
 		}
 
 		return $this->render('/category/create.html.twig', [

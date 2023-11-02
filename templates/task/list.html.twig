@@ -6,6 +6,11 @@
 	.card {
 		width: fit-content;
 		padding: 1% 2%;
+		transition: .25s;
+		cursor: pointer;
+	}
+	.card:hover {
+		background-color: lightgray;
 	}
 	.card-links {
 		display: flex;
@@ -15,30 +20,89 @@
 	.finished {
 		background-color: lightgray;
 	}
-	.ano {
+	.card.ano {
 		background-color: darksalmon;
 	}
+	.ano:hover {
+		background-color: #c55e3b
+	}
+	.category {
+		padding: 5px;
+		border-radius: 8px;
+	}
+	.list-categories {
+		display: flex;
+		gap: 5px;
+	}
+
+	#popup-container {
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		align-items:center;
+		position: fixed;
+		background-color: rgba(0, 0, 0, 0.5);
+		z-index: 3;
+	}
+
+	#popup-task {
+		padding: 2%;
+		border-radius: 6px;
+		width: fit-content;
+		background-color: white;
+		position: relative;
+	}
+	#close-popup {
+		color: red;
+		position: absolute;
+		top: 1%;
+		right: 2%;
+		cursor: pointer;
+		font-weight: bold;
+	}
+
+	#popup-task-categories-container {
+		display: flex;
+		gap: 5px;
+		margin: 10% auto;
+	}
+
 </style>
 {% endblock %}
 
 {% block body %}
 	<a href="{{ path('task_create') }}" class="btn btn-info pull-right">Create task</a>
+	<div id="popup-container" style="display:none">
+		<div id="popup-task">
+			<h1 id="popup-task-title"></h1>
+			<div id="popup-task-categories-container"></div>
+			<hr>
+			<h4 id="popup-task-content"></h4>
+			<p id="close-popup">X</p>
+		</div>
+	</div>
 	<div class="row">
 		{% for task in tasks %}
-		<div class="col-sm-4 col-lg-4 col-md-4 card {{ ((task.author.email == "ano@test.com") ? "ano" : "") }}" id="task_{{ task.id }}">
-			<div class="thumbnail">
-				<h4 class="card-title"><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
-				<p class="card-text">{{ task.content }}</p>
-				{% if is_granted('ROLE_ADMIN') %}
-					<small>{{ task.author.email }}</small>
-				{% endif %}
-				<div class="card-links">
-					<a href="{{ path('task_edit', {'id': task.id }) }}" class="btn btn-warning btn-sm">Edit</a>
-					<button class="btn btn-success btn-sm pull-right btn-toggle" data-id="{{ task.id }}">
-						{% if not task.isDone %}Mark as done{% else %}Mark as unfinished{% endif %}
-					</button>
-					<button class="btn btn-danger btn-sm pull-right btn-delete-task" data-task-id="{{ task.id }}" data-crsf="{{ csrf_token('delete' ~ task.id) }}">Delete</button>
-				</div>
+		<div class="col-sm-4 col-lg-4 col-md-4 card {{ ((task.author.email == "ano@test.com") ? "ano" : "") }}" data-div-task-id="{{ task.id }}">
+			<h4 class="card-title"><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+			<div class="list-categories">
+				{% for category in task.categories %}
+					<small class="category" style="background-color:{{ category.color }};">{{ category.name }}</small>
+				{% endfor %}
+			</div>
+			<p class="card-text">{{ task.content }}</p>
+			{% if is_granted('ROLE_ADMIN') %}
+				<small>{{ task.author.email }}</small>
+			{% endif %}
+			<div class="card-links">
+				<a href="{{ path('task_edit', {'id': task.id }) }}" class="btn btn-warning btn-sm">Edit</a>
+				<button class="btn btn-success btn-sm pull-right btn-toggle" data-id="{{ task.id }}">
+					{% if not task.isDone %}Mark as done{% else %}Mark as unfinished{% endif %}
+				</button>
+				<button class="btn btn-danger btn-sm pull-right btn-delete-task" data-task-id="{{ task.id }}" data-crsf="{{ csrf_token('delete' ~ task.id) }}">Delete</button>
 			</div>
 		</div>
 		{% else %}
@@ -65,7 +129,7 @@
 						btnClicked.target.classList.remove((data.newState ? "btn-success" : "btn-secondary"));
 						btnClicked.target.classList.add((data.newState ? "btn-secondary" : "btn-success"));
 						//If task is undone, remove the finished class.
-						(data.newState ? document.getElementById("task_" + btnId).classList.add("finished") : document.getElementById("task_" + btnId).classList.remove("finished"));
+						(data.newState ? document.querySelector("div[data-div-task-id='" + btnId + "']").classList.add("finished") : document.querySelector("div[data-div-task-id='" + btnId + "']").classList.remove("finished"));
 						setWaiting(false);
 					})
 				})
@@ -88,9 +152,48 @@
 						}).then(data => {
 							console.log(data);
 							if (data.success) {
-								document.getElementById("task_" + taskId).remove();
+								document.querySelector("div[data-div-task-id='" + taskId + "']").remove();
 							}
 						})
+					}
+				})
+			})
+
+			document.querySelectorAll(".category").forEach(category => {
+				let color = window.getComputedStyle(category, "").getPropertyValue("background-color");
+				let colorArray = color.split(",");
+				let colorArrayClean = [];
+				colorArray.forEach(c => {
+					colorArrayClean.push(parseInt(c.replace(/\D+/g, "")));
+				})
+				let colorCalculed = Math.round(((colorArrayClean[0] * 299) + (colorArrayClean[1] * 587) + (colorArrayClean[2] * 114)) / 1000);
+				let textColor = ((colorCalculed > 125) ? 'black' : 'white');
+				category.style.color = textColor;
+			});
+
+			document.getElementById("close-popup").addEventListener("click", () => {
+				document.getElementById("popup-container").style.display = "none";
+			})
+
+			document.querySelectorAll(".card").forEach(card => {
+				card.addEventListener("click", cardClicked => {
+					let cardWithId = cardClicked.target;
+					if (!cardWithId.getAttribute("data-div-task-id") && cardWithId.parentNode.getAttribute("data-div-task-id")) {
+						cardWithId = cardClicked.target.parentNode;
+					}
+					if (cardWithId.getAttribute("data-div-task-id")) {
+						document.getElementById("popup-container").style.display = "flex";
+						document.getElementById("popup-task-title").textContent = cardWithId.querySelector(".card-title").textContent;
+						document.getElementById("popup-task-content").textContent = cardWithId.querySelector(".card-text").textContent;
+						let categoriesContainerPopup = document.getElementById("popup-task-categories-container");
+						categoriesContainerPopup.innerHTML = "";
+						cardWithId.querySelectorAll(".category").forEach(category => {
+							let newCat = category.cloneNode(true);
+							console.log(newCat);
+							categoriesContainerPopup.appendChild(newCat);
+						})
+
+						
 					}
 				})
 			})

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\TaskRepository;
 use App\Entity\Task;
 use App\Form\TaskType;
+use App\Repository\CategoryRepository;
 use App\Security\AccessVoter;
 use App\Security\TaskVoter;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,7 +61,7 @@ class TaskController extends AbstractController
 	}
 
 	#[Route("/{id}/edit", name:"task_edit")]
-	public function edit(Task $task, Request $request, TaskRepository $taskRepository) : Response
+	public function edit(Task $task, Request $request, TaskRepository $taskRepository, CategoryRepository $categoryRepository) : Response
 	{
 		$this->denyAccessUnlessGranted(TaskVoter::VIEW, $task);
 
@@ -69,6 +70,11 @@ class TaskController extends AbstractController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$categories = $form->get('categories')->getData();
+			foreach($categories as $category) {
+				$catToAdd = $categoryRepository->find($category);
+				$task->addCategory($catToAdd);
+			}
 			$taskRepository->save($task, true);
 
 			$this->addFlash('success', 'Task has successfully been edited.');
