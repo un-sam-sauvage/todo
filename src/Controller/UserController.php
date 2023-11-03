@@ -18,12 +18,7 @@ class UserController extends AbstractController
 	public function index(UserRepository $userRepository) : Response
 	{
 		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_ADMIN);
-
-		if ($this->getUser() && in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
-			return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
-		} else {
-			return $this->render('security/login.html.twig');
-		}
+		return $this->render('user/list.html.twig', ['users' => $userRepository->findAll()]);
 	}
 
 	#[Route('/create', name:'user_create')]
