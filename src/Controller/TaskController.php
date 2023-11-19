@@ -23,7 +23,6 @@ class TaskController extends AbstractController
 	#[IsGranted('accessLogged','', 'Forbidden', Response::HTTP_FORBIDDEN)]
 	public function index(TaskRepository $taskRepository) : Response
 	{
-
 		//si l'utilisateur est connecté
 		if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
 			return $this->render('task/list.html.twig', [
@@ -38,9 +37,8 @@ class TaskController extends AbstractController
 
 	#[Route("/create", name:"task_create")]
 	#[IsGranted('accessLogged','', 'Forbidden', Response::HTTP_FORBIDDEN)]
-	public function new(Request $request, TaskRepository $taskRepository) : Response
+	public function new(Request $request, TaskRepository $taskRepository, CategoryRepository $categoryRepository) : Response
 	{
-		// $this->denyAccessUnlessGranted(AccessVoter::ACCESS_LOGGED);
 
 		$task = new Task();
 		$form = $this->createForm(TaskType::class, $task);
@@ -48,6 +46,11 @@ class TaskController extends AbstractController
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
+			$categories = $form->get('categories')->getData();
+			foreach($categories as $category) {
+				$catToAdd = $categoryRepository->find($category);
+				$task->addCategory($catToAdd);
+			}
 			$task->setAuthor($this->getUser());
 			$taskRepository->save($task, true);
 
@@ -80,7 +83,6 @@ class TaskController extends AbstractController
 			$taskRepository->save($task, true);
 
 			$this->addFlash('success', 'Task has successfully been edited.');
-
 			return $this->redirectToRoute('task_list', [], Response::HTTP_SEE_OTHER);
 		}
 

@@ -52,6 +52,7 @@ class AppFixtures extends Fixture
 			$task->setContent("content n°". $i);
 			$task->setAuthor((($i % 2 == 0) ? $userAdmin : $user));
 			$task->addCategory($categories[rand(0, count($categories) - 1)]);
+			$task->addCategory($categories[rand(0, count($categories) - 1)]);
 			$manager->persist($task);
 		}
 

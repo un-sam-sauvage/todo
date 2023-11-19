@@ -24,7 +24,6 @@ class TaskRepository extends ServiceEntityRepository
 	public function save(Task $entity, bool $flush = false): void
 	{
 		$this->getEntityManager()->persist($entity);
-
 		if ($flush) {
 			$this->getEntityManager()->flush();
 		}
