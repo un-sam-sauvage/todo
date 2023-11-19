@@ -13,16 +13,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route("/task")]
 class TaskController extends AbstractController
 {
 
 	#[Route("/", name:"task_list")]
-	#[IsGranted('accessLogged','', 'Forbidden', Response::HTTP_FORBIDDEN)]
 	public function index(TaskRepository $taskRepository) : Response
 	{
+		
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_LOGGED, null, 'Forbidden');
+
 		//si l'utilisateur est connecté
 		if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
 			return $this->render('task/list.html.twig', [
@@ -36,9 +37,10 @@ class TaskController extends AbstractController
 	}
 
 	#[Route("/create", name:"task_create")]
-	#[IsGranted('accessLogged','', 'Forbidden', Response::HTTP_FORBIDDEN)]
 	public function new(Request $request, TaskRepository $taskRepository, CategoryRepository $categoryRepository) : Response
 	{
+
+		$this->denyAccessUnlessGranted(AccessVoter::ACCESS_LOGGED);
 
 		$task = new Task();
 		$form = $this->createForm(TaskType::class, $task);

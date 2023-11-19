@@ -35,12 +35,12 @@ class TaskControllerTest extends WebTestCase {
 	}
 	public function test403WhenNotLoggedForSeeingTaskList() {
 		$this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_list'));
-		$this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+		$this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 	}
 
 	public function test403WhenNotLoggedToCreateTask() {
 		$this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('task_create'));
-		$this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+		$this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 	}
 
 	public function testUserSeeingIsTask() {

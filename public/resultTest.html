@@ -1,0 +1,17 @@
+PHPUnit 10.4.2 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.1.12
+Configuration: D:\WEB\Symfony\todo\phpunit.xml.dist
+
+........................                                          24 / 24 (100%)
+
+Time: 00:00.540, Memory: 34.00 MB
+
+[30;42mOK (24 tests, 24 assertions)[0m
+
+[43;30mRemaining indirect deprecation notices (10)[0m
+
+  10x: Version detection logic for MySQL will change in DBAL 4. Please specify the version as the server reports it, e.g. "10.9.3-MariaDB" instead of "mariadb-10.9". (AbstractMySQLDriver.php:149 called by AbstractMySQLDriver.php:41, https://github.com/doctrine/dbal/pull/5779, package doctrine/orm)
+    6x in TaskControllerTest::setUp from App\Test\Controller
+    4x in HomeControllerTest::setUp from App\Test\Controller
+
