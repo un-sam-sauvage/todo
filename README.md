@@ -316,3 +316,13 @@ Les `FormType` sont des formulaires qui permettent de faire une première valida
 
 **Comment s'en prévenir ?** Comme je vous en parlais, les FormType sont un bon moyen de prévenir les données indésirables. Déjà les champs vont avoir un type précis, ce qui empêchera la bonne validation du formulaire si les données entrées n'ont pas le bon type.
 Le formulaire est généré automatiquement grâce au controller ce qui rend la chose plus facile. Toutefois, vous pouvez le modifier si vous voulez des données particulières qui ne sont pas prévues de base dans votre entité.
+
+## V - Bonnes pratiques à avoir
+
+Lors du développement de l'application, il est préférable de respecter certaines règles afin de garder une cohérence dans le projet ou encore de faciliter sa pérennité.
+
+**Chacun s'occupe de sa partie jusqu'au bout :**
+
+Si vous devez développer une fonctionnalité particulière de l'application, vous devez le faire jusqu'au bout, c'est à dire que vous allez écrire les tests nécessaire à la vérification du bon fonctionnement de votre fonctionnalité, vous allez aussi effectuer les autres test afin de voir si votre ajout n'a rien boulverser du contenu existant dans le cas ou ça pourrait affecter d'autres parties que la votre.
+
+Il est également nécessaire de remplir la documentation / de commenter son code afin que les futures personnes qui travailleront sur votre partie ne passe pas plus de temps à essayer de comprendre ce qu'il se passe qu'à réellement continuer de développer le projet.
