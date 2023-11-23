@@ -3,14 +3,14 @@
 ## Introduction
 
 Dans cette documentation, nous allons parler d'une application de todo.
-C'est à dire que les utilisateurs du site pourront créer des tâches et dire quand ils les ont fini ou non.
+C'est à dire que les utilisateurs du site pourront créer des tâches et indiquer si elles sont finies ou non.
 
 ## I - Création d'une nouvelle page
 
 ### 1) Créer une page dans le code
 
 - Pour créer une nouvelle page, il faut vous rendre dans le controller correspondant.
-  - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de class qui correspond au nom du fichier.
+  - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
   - N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
 - Une fois que vous êtes dans le bon controller, vous devez créer une nouvelle fonction en indiquant la route en annotation au dessus :
 
@@ -21,7 +21,7 @@ public function index () {
 }
 ```
 
-Vous pourrez simplifier le chemin de votre route en spécifiant une route au dessus de la class :
+Vous pourrez simplifier le chemin de votre route en spécifiant une route au dessus de la classe :
 
 ```php
 #[Route("/task", name:"app_task_")]
@@ -34,9 +34,9 @@ public class TaskController extends AbstractController{
 }
 ```
 
-Ce qui donner comme chemin pour y accéder : `/task/create` et comme nom : `app_task_create`.
+Ce qui donne comme chemin pour y accéder : `/task/create` et comme nom : `app_task_create`.
 
-Si vous souhaitez ajouter des paramètres dans votre route, *par exemple pour des id*, il vous suffit de mettre le paramètre en accolades ex : `/maRoute/{id}`. Vous pourrez ensuite récupérer directement l'entité attachée à cet id dans les paramètres de votre fonction :
+Si vous souhaitez ajouter des paramètres dans votre route, *par exemple pour des id*, il vous suffit de mettre le paramètre entre accolades ex : `/maRoute/{id}`. Vous pourrez ensuite récupérer directement l'entité attachée à cet id dans les paramètres de votre fonction :
 
 ```php
 #[Route("/{id}/edit", name:"edit")]
@@ -51,11 +51,11 @@ Dans l'exemple ci-dessus, vous pouvez voir que nous avons fait appel à l'entit�
 
 Maintenant que vous avez créer votre fonction, il vous faut quand même afficher quelque chose à la sortie (sauf si ce n'est que du code exécutif bien sûr).
 
-Pour afficher une page, nous utilisons le framework qui est fourni avec Symfony, [Twig](https://twig.symfony.com/).
+Pour afficher une page, nous utilisons le framework qui est fourni avec Symfony : [Twig](https://twig.symfony.com/).
 
-Pour créer votre nouvelle page, vous allez vous rendre dans le dossier `templates`, puis vous choisirez le sous-dossier correspondant ou créerez un sous-dossier pertinent dans le cas où votre page ne rentrerez dans aucune catégorie connue. Votre fichier doit avoir la terminaison : `.html.twig`
+Pour créer votre nouvelle page, vous allez vous rendre dans le dossier `templates`, puis vous choisirez le sous-dossier correspondant ou créerez un sous-dossier pertinent dans le cas où votre page ne rentrerez dans aucun sous-dossier existant. Votre fichier doit avoir la terminaison : `.html.twig`
 
-Dans votre fichier, il y a quelque règles à penser. Si vous voulez créer des blocs, vérifiez qu'ils n'existent pas déjà dans le fichier `base.html.twig`, qui contient du code commun à toutes les pages. Toutes les pages sont étendues de ce fichier afin d'avoir un style commune ou encore des éléments communs (notamment la navbar).
+Dans votre fichier, il y a quelque règles à respecter. Si vous voulez créer des blocs, vérifiez qu'ils n'existent pas déjà dans le fichier `base.html.twig`, fichier qui contient du code commun à toutes les pages. Toutes les pages sont étendues de ce fichier afin d'avoir un style commune ou encore des éléments communs (notamment la navbar).
 
 Donc votre fichier devra contenir au moins ces éléments :
 
@@ -77,7 +77,7 @@ Pour afficher votre fichier, vous devez le `render` dans votre fonction crée pr
 return $this->render('votreDossier/votreFichier.html.twig');
 ```
 
-:warning: **Attention** : tout code executé après le return ne sera pas lu car les informations seront déjà envoyées. Vérifiez donc où est ce que vous placez votre return
+:warning: **Attention** : tout code executé après le return ne sera pas lu car les informations seront déjà envoyées. Vérifiez donc où est ce que vous placez le return (en général à la fin ou pour finir le code si une condition est remplie)
 
 Il est possible de passer des paramètres à votre fichier, ce qui peut être pratique pour afficher des informations que vous avez récupéré grâce au code. Dans l'exemple ci-dessous, je vais montrer comment afficher une tâche en fonction de son id :
 
@@ -96,35 +96,37 @@ public function show (Task $task) {
 
 ```twig
 <!-- Dans le fichier twig -> le bloc body -->
+
 <h1>Nom de la tâche : {{ task.name }}</h1>
 <p>Description de la tâche : {{ task.description }}</p>
 ```
 
-Vous pouvez passer plusieurs paramètres dans le render car il s'agit d'un array, vous pourrez ainsi récupérez plusieurs informations si besoin.
+Vous pouvez passer plusieurs paramètres dans le render car il s'agit d'un array, vous pourrez ainsi récupérer plusieurs informations si besoin.
 
-Pour plus d'informations sur twig, je vous renvois à sa [documentation](https://twig.symfony.com/doc/). Vous verrez que vous pouvez aussi utilisez des conditions dans le rendu ou encore accéder à l'utilisateur qui est connecté. C'est un outil bien pratique.
+Pour plus d'informations sur twig, je vous renvois à sa [documentation](https://twig.symfony.com/doc/). Vous verrez que vous pouvez aussi utiliser des conditions dans le rendu ou encore accéder à l'utilisateur qui est connecté. C'est un outil bien pratique.
 
 ## II- Création d'une nouvelle entité
 
 Pour créer une nouvelle entité dans symfony, vous allez utiliser les lignes de commande.
 > Avant toute chose, il faut penser à require le maker: `composer require --dev symfony/maker-bundle`
+>`--dev` permet d'utiliser cette librairie uniquement en environnement de développement et non pas de production
 
 Pour ce faire, rendez-vous dans le dossier contenant votre projet Symfony et faite : `php bin/console make:entity`
-Vous allez ensuite avoir plusieurs questions afin de remplir les paramètres de votre nouvelle entité.
+Plusieurs questions vous seront ensuite posées afin de crée les propriétés de votre nouvelle entité.
 
-- Vous allez commencez par choisir le nom de votre entité.
+- Vous allez commencer par choisir le nom de votre entité.
 - Le maker vous demandera ensuite de renseigner les propriétés que doit contenir votre entité.
   - Vous commencez par le nom
     - :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
-  - Ensuite il y a le type (`int`, `string`, `bool`...) 
-    > si vous ne savez pas quel type mettre, mettez un point d'interrogation, et la liste de tout les types disponibles apparaîtra.
-  - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, par exemple la taille de la chaîne de caractère si vous avez choisi un string.
-  - Le maker vous demandera ensuite si vous voulez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égal à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
-- Une fois que tout les paramètres de la propriété sont remplis, vous pouvez entrer le nom d'une nouvelle propriété si vous en avez besoin d'autres ou juste appuyer sur entrer lorsque vous devez choisir le nom de la nouvelle propriété.
+  - Ensuite il y a le type (`int`, `string`, `bool`...)
+    > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
+  - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de caractère si vous avez choisi un string).
+  - Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
+- Une fois que tous les paramètres de la propriété sont remplis, vous pouvez entrer le nom d'une nouvelle propriété si vous en avez besoin d'autres ou juste appuyer sur entrer lorsque vous devez choisir le nom de la nouvelle propriété.
 - Si vous êtes en local, vérifier que votre serveur SQL soit bien allumé
     > avec Xampp, il suffit de cliquer sur le start à côté de MySQL.
 - Ensuite il y a d'autres commandes à entrer : `php bin/console make:migration`.
-  - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier *`migration`* qui est à la racine.
+  - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
 - Enfin il reste : `php bin/console doctrine:migrations:migrate`.
   - Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
     > En effet, il est possible de préparer l'insertion de plusieurs entités en une seule migration.
@@ -135,14 +137,14 @@ Une fois que tout est fait, vous pouvez vous rendre dans votre base de donnéees
 **Pour l'édition d'entités déjà existantes, c'est très simple :**
 
 - Vous commencez de la même manière, en écrivant `php bin/console EntiteAModifier`. Ce coup-ci on rajoute juste le nom de l'entité que l'on veut modifier juste après
-  > A notre que l'on peut créer une nouvelle entité en renseignant le nom directement à côté de la commande comme fait ici.
+  > A noter que l'on peut créer une nouvelle entité en renseignant le nom directement à côté de la commande comme fait ici.
 
 Vous n'avez plus qu'à rajouter les champs dont vous avez besoin.
 
 Certaines éditions ne se font pas par ligne de commande mais vous allez devoir modifier le fichier php de l'entité directement :
 
 - Pour ce faire, rendez-vous dans le fichier de l'entité que vous souhaitez modifier. Par exemple, je vais prendre `Task.php`.
-- On peut retrouver diverses annotations au dessus des propriété de l'entité : 
+- On peut retrouver diverses annotations au dessus des propriété de l'entité :
 
 ```php
 //Indique que la propriété title à une longueur max de 255 caractères
@@ -162,7 +164,7 @@ Ceci permettra de générer une erreur si l'on essaie de mettre un titre qui fai
 ```
 
 On peut aussi remarquer la fonction construct qui nous permet de mettre les valeurs par défaut que l'on souhaite dans notre entité.
-  > Pour rappel, la fonction construc est appelé lorsque nous créeons une nouvelle instance de l'objet
+  > Pour rappel, la fonction construct est appelée lorsque nous créeons une nouvelle instance de l'objet
 
 ```php
     $task = new Task()
@@ -170,16 +172,16 @@ On peut aussi remarquer la fonction construct qui nous permet de mettre les vale
 
 Ce qui peut être bien utile, pour des propriété qu'on ne veut pas avoir à spécifier à chaque fois, ou alors pour des propriétés qui ne doivent pas être accessibles lors de la création par une personne ne possédant pas les droits.*
 
-## III - Fonctionnement de la base de donnée.
+## III - Fonctionnement de la base de donnée
 
-La base de donnée de Symfony, repose sur doctrine ORM ("Object-Relational Mapping"), un outil qui permet de faciliter la communication entre le code et la base de données en convertissant les objets de la base de données en objet php. 
+La base de donnée de Symfony, repose sur doctrine ORM ("Object-Relational Mapping"), un outil qui permet de faciliter la communication entre le code et la base de données en convertissant les objets de la base de données en objet php.
 Grâce à cela, il n'y a pas besoin d'écrire de requête SQL dans le code car les entités sont des objets qui ont des fonctions associés permettant d'effectuer des actions dessus.
 
 Nous avons déjà vu comment créer une entité dans la base de donnés. Nous allons maintenant voir comment nous pouvons récupérer ces données ou une partie grâce au **repository**.
 
 Nous allons reprendre notre controller du début mais ce coup-ci, nous allons afficher toutes les tâches que nous avons au lieu de n'en [afficher qu'une](#afficher-une-tache).
 
-Pour ce faire, nous allons créer une nouvelle fonction qui va avoir certains paramètres : 
+Pour ce faire, nous allons créer une nouvelle fonction qui va avoir certains paramètres :
 
 ```php
 #[Route("/", name:"show_all")]
@@ -196,7 +198,7 @@ Nous avons déjà vu que mettre un paramètre comme ceci, nous permet d'accéder
 - Le controller `TaskController.php` qui contiendra toutes les routes relatives à notre entité et qui permettra ensuite de faire les actions voulues sur l'entité ou afficher les pages en lien avec cette entité.
 - Le repository `TaskRepository.php` qui contiendra le lien entre l'entité et la base de donnée. C'est dedans que nous pourrons sauvegarder l'entité dans la base de donées, faire des fonctions qui permettent la sélection précise de l'entité que l'on veut (par exemple pour faire de la pagination ou autre).
 
-Donc avec ce paramètre est cet objet, nous allons pouvoir sélectionner tout les objets de notre entité : 
+Donc avec ce paramètre est cet objet, nous allons pouvoir sélectionner tous les objets de notre entité :
 
 ```php
 #[Route("/", name:"show_all")]
@@ -211,7 +213,7 @@ Cette fonction est présente de base dans le repository, nous n'avons pas besoin
 
 Si vous avez besoin de créer des fonctions particulières de sélection, je vous conseille de le faire dans le repository afin de garder votre projet organisé au possible.
 
-Nous allons voir un exemple, avec de la pagination pour récupérer les tâches : 
+Nous allons voir un exemple, avec de la pagination pour récupérer les tâches :
 
 ```php
 //Dans notre repositoy, nous allons créer la fonction dont nous avons besoin
@@ -243,7 +245,7 @@ la première ligne de cette fonction est une requête SQL un peu spéciale, car 
 - Enfin, nous avons la dernière ligne qui renvoie le résultat de l'opération afin de pouvoir le récupérer dans le controller.
 
 Justement. Du côté du controller, comment ça se passe ?
-Et bien c'est très simple : 
+Et bien c'est très simple :
 
 ```php
 //Dans notre controller
@@ -256,7 +258,7 @@ public function taskPage (TaskRepository $taskRepository, Request $request) {
 ```
 
 Bien il n'y a pas beaucoup de ligne donc ça ne va pas être trop long à expliquer :smile:.
-Par contre il y a quelque chose dont nous n'avons jamais parler, il s'agit du `Request`. Cela permet de récupérer les variables qui sont dans la variable globale `$_GET` ou `$_POST`. Ici nous allons passer le paramètre page en GET (donc dans l'url). Je profite juste pour montrer différentes choses en rapport avec Symfony.
+Par contre il y a quelque chose dont nous n'avons jamais parlé, il s'agit du `Request`. Cela permet de récupérer les variables qui sont dans la variable globale `$_GET` ou `$_POST`. Ici nous allons passer le paramètre page en GET (donc dans l'url). Je profite juste pour montrer différentes choses en rapport avec Symfony.
 Notre url ressemblera à ça : `nomDeDomaine/task/page?page=1`.
 
 >petit rappel. Juste au dessus de la classe de ce controller, nous avons mis que la route était `/task` c'est pour cela que vous le retrouvez dans cet exemple
