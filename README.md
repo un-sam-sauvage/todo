@@ -5,6 +5,16 @@
 Dans cette documentation, nous allons parler d'une application de todo.
 C'est à dire que les utilisateurs du site pourront créer des tâches et indiquer si elles sont finies ou non.
 
+### Installation du projet
+
+- Cloner le projet dans un nouveau dossier depuis le github.
+- Rendez-vous en ligne de commande dans le dossier contenant le projet.
+- Exécutez la commande `composer install` afin d'installer toutes les dépendances / librairies nécessaires au projet.
+- Allumez votre base de données si ce n'est pas fait et exécutez la commande `php bin/console doctrine:database:create` suivi de la commande `php bin/console doctrine:migrations:migrate` afin de créer la base de données et de la remplir des entités voulues.
+- Vous pouvez ensuite exécutez la commande `php bin/console doctrine:fixtures:load` afin de générer un set de données de test pour l'application.
+- Pour lancer l'application : `symfony server:start`, pour se connecter en admin, rendez-vous sur la page de connexion : [http://localhost:8000/login](http://localhost:8000/login), si vous avez utiliser les fixtures, alors l'identifiant est adminUser@test.com et le mot de passe 123456
+:warning: Ce sont des données de test il est important de les changer afin d'avoir des données plus sécurisées lors de la mise en production.
+
 ## I - Création d'une nouvelle page
 
 ### 1) Créer une page dans le code
