@@ -7,22 +7,22 @@ C'est à dire que les utilisateurs du site pourront créer des tâches et indiqu
 
 ### Installation du projet
 
-- Cloner le projet dans un nouveau dossier depuis le github.
-- Rendez-vous en ligne de commande dans le dossier contenant le projet.
-- Exécutez la commande `composer install` afin d'installer toutes les dépendances / librairies nécessaires au projet.
-- Allumez votre base de données si ce n'est pas fait et exécutez la commande `php bin/console doctrine:database:create` suivi de la commande `php bin/console doctrine:migrations:migrate` afin de créer la base de données et de la remplir des entités voulues.
-- Vous pouvez ensuite exécutez la commande `php bin/console doctrine:fixtures:load` afin de générer un set de données de test pour l'application.
-- Pour lancer l'application : `symfony server:start`, pour se connecter en admin, rendez-vous sur la page de connexion : [http://localhost:8000/login](http://localhost:8000/login), si vous avez utiliser les fixtures, alors l'identifiant est adminUser@test.com et le mot de passe 123456
+-   Cloner le projet dans un nouveau dossier depuis le github.
+-   Rendez-vous en ligne de commande dans le dossier contenant le projet.
+-   Exécutez la commande `composer install` afin d'installer toutes les dépendances / librairies nécessaires au projet.
+-   Allumez votre base de données si ce n'est pas fait et exécutez la commande `php bin/console doctrine:database:create` suivi de la commande `php bin/console doctrine:migrations:migrate` afin de créer la base de données et de la remplir des entités voulues.
+-   Vous pouvez ensuite exécutez la commande `php bin/console doctrine:fixtures:load` afin de générer un set de données de test pour l'application.
+-   Pour lancer l'application : `symfony server:start`, pour se connecter en admin, rendez-vous sur la page de connexion : [http://localhost:8000/login](http://localhost:8000/login), si vous avez utiliser les fixtures, alors l'identifiant est adminUser@test.com et le mot de passe 123456
 :warning: Ce sont des données de test il est important de les changer afin d'avoir des données plus sécurisées lors de la mise en production.
 
 ## I - Création d'une nouvelle page
 
 ### 1) Créer une page dans le code
 
-- Pour créer une nouvelle page, il faut vous rendre dans le controller correspondant.
-  - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
-  - N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
-- Une fois que vous êtes dans le bon controller, vous devez créer une nouvelle fonction en indiquant la route en annotation au dessus :
+-   Pour créer une nouvelle page, il faut vous rendre dans le controller correspondant.
+  -   S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
+  -   N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
+-   Une fois que vous êtes dans le bon controller, vous devez créer une nouvelle fonction en indiquant la route en annotation au dessus :
 
 ```php
 #[Route("/", name:"task_list")]
@@ -124,37 +124,37 @@ Pour créer une nouvelle entité dans symfony, vous allez utiliser les lignes de
 Pour ce faire, rendez-vous dans le dossier contenant votre projet Symfony et faite : `php bin/console make:entity`
 Plusieurs questions vous seront ensuite posées afin de crée les propriétés de votre nouvelle entité.
 
-- Vous allez commencer par choisir le nom de votre entité.
-- Le maker vous demandera ensuite de renseigner les propriétés que doit contenir votre entité.
-  - Vous commencez par le nom
-      - :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
-  - Ensuite il y a le type (`int`, `string`, `bool`...)
+-   Vous allez commencer par choisir le nom de votre entité.
+-   Le maker vous demandera ensuite de renseigner les propriétés que doit contenir votre entité.
+  -   Vous commencez par le nom
+    -   :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
+  -   Ensuite il y a le type (`int`, `string`, `bool`...)
       > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
-  - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de ca ractère si vous avez choisi un string).
-  - Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
-- Une fois que tous les paramètres de la propriété sont remplis, vous pouvez entrer le nom d'une nouvelle propriété si vous en avez besoin d'autres ou juste appuyer sur entrer lorsque vous devez choisir le nom de la nouvelle propriété.
-- Si vous êtes en local, vérifier que votre serveur SQL soit bien allumé
+  -   Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de ca ractère si vous avez choisi un string).
+  -   Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
+-   Une fois que tous les paramètres de la propriété sont remplis, vous pouvez entrer le nom d'une nouvelle propriété si vous en avez besoin d'autres ou juste appuyer sur entrer lorsque vous devez choisir le nom de la nouvelle propriété.
+-   Si vous êtes en local, vérifier que votre serveur SQL soit bien allumé
     > avec Xampp, il suffit de cliquer sur le start à côté de MySQL.
-- Ensuite il y a d'autres commandes à entrer : `php bin/console make:migration`.
-  - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
-- Enfin il reste : `php bin/console doctrine:migrations:migrate`.
-  - Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
+-   Ensuite il y a d'autres commandes à entrer : `php bin/console make:migration`.
+  -   Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
+-   Enfin il reste : `php bin/console doctrine:migrations:migrate`.
+  -   Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
       > En effet, il est possible de préparer l'insertion de plusieurs entités en une seule migration.
-  - Il se peut que certaines requêtes générent des erreurs lors de leurs exécutions, dès fois il suffit de commenter certaines lignes qui peuvent poser problèmes et le tour est joué. (Votre base de données n'en sera que peu impactées, car ce sont souvent d'anciennes requêtes qui peuvent poser problèmes.)
+  -   Il se peut que certaines requêtes générent des erreurs lors de leurs exécutions, dès fois il suffit de commenter certaines lignes qui peuvent poser problèmes et le tour est joué. (Votre base de données n'en sera que peu impactées, car ce sont souvent d'anciennes requêtes qui peuvent poser problèmes.)
 
 Une fois que tout est fait, vous pouvez vous rendre dans votre base de donnéees (en ligne de commande, via PHPMyAdmin ou une extension de votre éditeur de code peut importe) et vous pourrez observer qu'une nouvelle table est apparu, portant le nom de votre entité, et que chaque propriété est une colonne de cette table.
 
 **Pour l'édition d'entités déjà existantes, c'est très simple :**
 
-- Vous commencez de la même manière, en écrivant `php bin/console EntiteAModifier`. Ce coup-ci on rajoute juste le nom de l'entité que l'on veut modifier juste après
+-   Vous commencez de la même manière, en écrivant `php bin/console EntiteAModifier`. Ce coup-ci on rajoute juste le nom de l'entité que l'on veut modifier juste après
     > A noter que l'on peut créer une nouvelle entité en renseignant le nom directement à côté de la commande comme fait ici.
 
 Vous n'avez plus qu'à rajouter les champs dont vous avez besoin.
 
 Certaines éditions ne se font pas par ligne de commande mais vous allez devoir modifier le fichier php de l'entité directement :
 
-- Pour ce faire, rendez-vous dans le fichier de l'entité que vous souhaitez modifier. Par exemple, je vais prendre `Task.php`.
-- On peut retrouver diverses annotations au dessus des propriété de l'entité :
+-   Pour ce faire, rendez-vous dans le fichier de l'entité que vous souhaitez modifier. Par exemple, je vais prendre `Task.php`.
+-   On peut retrouver diverses annotations au dessus des propriété de l'entité :
 
 ```php
 //Indique que la propriété title à une longueur max de 255 caractères
@@ -204,9 +204,9 @@ Nous avons déjà vu que mettre un paramètre comme ceci, nous permet d'accéder
 
 **Une entité est composé de 3 éléments :**
 
-- L'entité `Task.php` qui contiendra toutes les propriétés de l'entité et les fonctions qui sont propres à ces propriétés.
-- Le controller `TaskController.php` qui contiendra toutes les routes relatives à notre entité et qui permettra ensuite de faire les actions voulues sur l'entité ou afficher les pages en lien avec cette entité.
-- Le repository `TaskRepository.php` qui contiendra le lien entre l'entité et la base de donnée. C'est dedans que nous pourrons sauvegarder l'entité dans la base de donées, faire des fonctions qui permettent la sélection précise de l'entité que l'on veut (par exemple pour faire de la pagination ou autre).
+-   L'entité `Task.php` qui contiendra toutes les propriétés de l'entité et les fonctions qui sont propres à ces propriétés.
+-   Le controller `TaskController.php` qui contiendra toutes les routes relatives à notre entité et qui permettra ensuite de faire les actions voulues sur l'entité ou afficher les pages en lien avec cette entité.
+-   Le repository `TaskRepository.php` qui contiendra le lien entre l'entité et la base de donnée. C'est dedans que nous pourrons sauvegarder l'entité dans la base de donées, faire des fonctions qui permettent la sélection précise de l'entité que l'on veut (par exemple pour faire de la pagination ou autre).
 
 Donc avec ce paramètre est cet objet, nous allons pouvoir sélectionner tous les objets de notre entité :
 
@@ -239,20 +239,20 @@ public function getPaginatedTask (int $limit, int $page) {
 
 Alors il y a plusieurs choses à dire sur cette fonction. Tout d'abord, on peut voir qu'elle prend deux paramètres. La limite et la page (qui nous sert à créer l'offset). Si vous êtes familier avec MySQL, cela doit vous rappeler des souvenirs.
 
-- La limit permet de savoir combien d'éléments nous voulons récupérer
-- La page permet de savoir à quelle page nous en sommes afin de calculer l'offset pour commencer à récupérer les données
+-   La limit permet de savoir combien d'éléments nous voulons récupérer
+-   La page permet de savoir à quelle page nous en sommes afin de calculer l'offset pour commencer à récupérer les données
 
 la première ligne de cette fonction est une requête SQL un peu spéciale, car au lieu de l'écrire comme nous aurions eu l'habitude de faire en temps normal, nous allons la "composer" avec Doctrine.
 
-- On commence par notre SELECT qui prend la forme de `createQueryBuilder()`. Dans lequel nous passons le paramètre comme quoi nous voulons les tâches `t`.
-- Nous allons ensuite dire que nous voulons ordonner les tâches par ordre de création `t.created_at` (ce n'est pas obligatoire, mais ça permet de voir un autre paramètre que nous pouvons passer dans cette fonction).
+-   On commence par notre SELECT qui prend la forme de `createQueryBuilder()`. Dans lequel nous passons le paramètre comme quoi nous voulons les tâches `t`.
+-   Nous allons ensuite dire que nous voulons ordonner les tâches par ordre de création `t.created_at` (ce n'est pas obligatoire, mais ça permet de voir un autre paramètre que nous pouvons passer dans cette fonction).
     > created_at est une propriété de l'entité tâche. C'est donc une des colonnes dans la base de données.
-- Ensuite, nous calculons l'offset, c'est-à-dire, à partir de quelle tâche est ce que nous sommes sur la bonne page.
+-   Ensuite, nous calculons l'offset, c'est-à-dire, à partir de quelle tâche est ce que nous sommes sur la bonne page.
     > pous ce faire, nous savons qu'il y a par exemple 10 tâches par page. si nous sommes sur la page 2, nous voulons donc commencer à la tâche n° 2 * 10 - 10 à savoir la tâche 10.
-- Vient ensuite la limit qui nous permet de savoir combien de tâches récupérer.
+-   Vient ensuite la limit qui nous permet de savoir combien de tâches récupérer.
     > pour poursuivre l'explication, nous allons donc récupérer les tâches 10 à 19.
     > la première page permet de récupérer les tâches de 0 à 9. (c'est comme un array le premier éléments est à 0).
-- Enfin, nous avons la dernière ligne qui renvoie le résultat de l'opération afin de pouvoir le récupérer dans le controller.
+-   Enfin, nous avons la dernière ligne qui renvoie le résultat de l'opération afin de pouvoir le récupérer dans le controller.
 
 Justement. Du côté du controller, comment ça se passe ?
 Et bien c'est très simple :
@@ -271,7 +271,7 @@ Bien il n'y a pas beaucoup de ligne donc ça ne va pas être trop long à expliq
 Par contre il y a quelque chose dont nous n'avons jamais parlé, il s'agit du `Request`. Cela permet de récupérer les variables qui sont dans la variable globale `$_GET` ou `$_POST`. Ici nous allons passer le paramètre page en GET (donc dans l'url). Je profite juste pour montrer différentes choses en rapport avec Symfony.
 Notre url ressemblera à ça : `nomDeDomaine/task/page?page=1`.
 
->petit rappel. Juste au dessus de la classe de ce controller, nous avons mis que la route était `/task` c'est pour cela que vous le retrouvez dans cet exemple
+> petit rappel. Juste au dessus de la classe de ce controller, nous avons mis que la route était `/task` c'est pour cela que vous le retrouvez dans cet exemple
 
 Cet url permet donc d'afficher les tâches de la page 1.
 
