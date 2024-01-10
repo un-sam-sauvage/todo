@@ -20,8 +20,8 @@ C'est à dire que les utilisateurs du site pourront créer des tâches et indiqu
 ### 1) Créer une page dans le code
 
 - Pour créer une nouvelle page, il faut vous rendre dans le controller correspondant.
-    - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
-    - N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
+  - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
+  - N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
 - Une fois que vous êtes dans le bon controller, vous devez créer une nouvelle fonction en indiquant la route en annotation au dessus :
 
 ```php
@@ -126,21 +126,21 @@ Plusieurs questions vous seront ensuite posées afin de crée les propriétés d
 
 - Vous allez commencer par choisir le nom de votre entité.
 - Le maker vous demandera ensuite de renseigner les propriétés que doit contenir votre entité.
-    - Vous commencez par le nom
+  - Vous commencez par le nom
       - :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
-    - Ensuite il y a le type (`int`, `string`, `bool`...)
-        > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
-    - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de ca ractère si vous avez choisi un string).
-    - Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
+  - Ensuite il y a le type (`int`, `string`, `bool`...)
+      > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
+  - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de ca ractère si vous avez choisi un string).
+  - Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
 - Une fois que tous les paramètres de la propriété sont remplis, vous pouvez entrer le nom d'une nouvelle propriété si vous en avez besoin d'autres ou juste appuyer sur entrer lorsque vous devez choisir le nom de la nouvelle propriété.
 - Si vous êtes en local, vérifier que votre serveur SQL soit bien allumé
     > avec Xampp, il suffit de cliquer sur le start à côté de MySQL.
 - Ensuite il y a d'autres commandes à entrer : `php bin/console make:migration`.
-    - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
+  - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
 - Enfin il reste : `php bin/console doctrine:migrations:migrate`.
-    - Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
-        > En effet, il est possible de préparer l'insertion de plusieurs entités en une seule migration.
-        - Il se peut que certaines requêtes générent des erreurs lors de leurs exécutions, dès fois il suffit de commenter certaines lignes qui peuvent poser problèmes et le tour est joué. (Votre base de données n'en sera que peu impactées, car ce sont souvent d'anciennes requêtes qui peuvent poser problèmes.)
+  - Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
+      > En effet, il est possible de préparer l'insertion de plusieurs entités en une seule migration.
+  - Il se peut que certaines requêtes générent des erreurs lors de leurs exécutions, dès fois il suffit de commenter certaines lignes qui peuvent poser problèmes et le tour est joué. (Votre base de données n'en sera que peu impactées, car ce sont souvent d'anciennes requêtes qui peuvent poser problèmes.)
 
 Une fois que tout est fait, vous pouvez vous rendre dans votre base de donnéees (en ligne de commande, via PHPMyAdmin ou une extension de votre éditeur de code peut importe) et vous pourrez observer qu'une nouvelle table est apparu, portant le nom de votre entité, et que chaque propriété est une colonne de cette table.
 
