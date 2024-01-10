@@ -20,8 +20,8 @@ C'est à dire que les utilisateurs du site pourront créer des tâches et indiqu
 ### 1) Créer une page dans le code
 
 - Pour créer une nouvelle page, il faut vous rendre dans le controller correspondant.
-  - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
-  - N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
+    - S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
+    - N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
 - Une fois que vous êtes dans le bon controller, vous devez créer une nouvelle fonction en indiquant la route en annotation au dessus :
 
 ```php
@@ -126,28 +126,28 @@ Plusieurs questions vous seront ensuite posées afin de crée les propriétés d
 
 - Vous allez commencer par choisir le nom de votre entité.
 - Le maker vous demandera ensuite de renseigner les propriétés que doit contenir votre entité.
-  - Vous commencez par le nom
-    - :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
-  - Ensuite il y a le type (`int`, `string`, `bool`...)
-    > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
-  - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de caractère si vous avez choisi un string).
-  - Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
+    - Vous commencez par le nom
+      - :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
+    - Ensuite il y a le type (`int`, `string`, `bool`...)
+        > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
+    - Vous pouvez choisir ensuite quelque paramètre relatifs au type que vous avez choisi, (par exemple la taille de la chaîne de ca ractère si vous avez choisi un string).
+    - Le maker vous demandera ensuite si vous souhaitez que cette propriété puisse être null dans la base de donnée ou si elle doit toujours être égale à quelque chose (même si c'est 0 ou une chaîne de caractère vide).
 - Une fois que tous les paramètres de la propriété sont remplis, vous pouvez entrer le nom d'une nouvelle propriété si vous en avez besoin d'autres ou juste appuyer sur entrer lorsque vous devez choisir le nom de la nouvelle propriété.
 - Si vous êtes en local, vérifier que votre serveur SQL soit bien allumé
     > avec Xampp, il suffit de cliquer sur le start à côté de MySQL.
 - Ensuite il y a d'autres commandes à entrer : `php bin/console make:migration`.
-  - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
+    - Cette commande permet à Symfony de préparer toutes les requêtes dont aura besoin la base de donées pour créer l'entité que vous venez de choisir. Vous pouvez retrouver le fichier qui a été crée par cette commande dans le dossier `migration` qui est à la racine.
 - Enfin il reste : `php bin/console doctrine:migrations:migrate`.
-  - Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
-    > En effet, il est possible de préparer l'insertion de plusieurs entités en une seule migration.
-    - Il se peut que certaines requêtes générent des erreurs lors de leurs exécutions, dès fois il suffit de commenter certaines lignes qui peuvent poser problèmes et le tour est joué. (Votre base de données n'en sera que peu impactées, car ce sont souvent d'anciennes requêtes qui peuvent poser problèmes.)
+    - Cette dernière commande permet d'éxecuter toutes les requêtes que vous avez pu préparer.
+        > En effet, il est possible de préparer l'insertion de plusieurs entités en une seule migration.
+        - Il se peut que certaines requêtes générent des erreurs lors de leurs exécutions, dès fois il suffit de commenter certaines lignes qui peuvent poser problèmes et le tour est joué. (Votre base de données n'en sera que peu impactées, car ce sont souvent d'anciennes requêtes qui peuvent poser problèmes.)
 
 Une fois que tout est fait, vous pouvez vous rendre dans votre base de donnéees (en ligne de commande, via PHPMyAdmin ou une extension de votre éditeur de code peut importe) et vous pourrez observer qu'une nouvelle table est apparu, portant le nom de votre entité, et que chaque propriété est une colonne de cette table.
 
 **Pour l'édition d'entités déjà existantes, c'est très simple :**
 
 - Vous commencez de la même manière, en écrivant `php bin/console EntiteAModifier`. Ce coup-ci on rajoute juste le nom de l'entité que l'on veut modifier juste après
-  > A noter que l'on peut créer une nouvelle entité en renseignant le nom directement à côté de la commande comme fait ici.
+    > A noter que l'on peut créer une nouvelle entité en renseignant le nom directement à côté de la commande comme fait ici.
 
 Vous n'avez plus qu'à rajouter les champs dont vous avez besoin.
 
@@ -174,7 +174,7 @@ Ceci permettra de générer une erreur si l'on essaie de mettre un titre qui fai
 ```
 
 On peut aussi remarquer la fonction construct qui nous permet de mettre les valeurs par défaut que l'on souhaite dans notre entité.
-  > Pour rappel, la fonction construct est appelée lorsque nous créeons une nouvelle instance de l'objet
+    > Pour rappel, la fonction construct est appelée lorsque nous créeons une nouvelle instance de l'objet
 
 ```php
     $task = new Task()
@@ -246,12 +246,12 @@ la première ligne de cette fonction est une requête SQL un peu spéciale, car 
 
 - On commence par notre SELECT qui prend la forme de `createQueryBuilder()`. Dans lequel nous passons le paramètre comme quoi nous voulons les tâches `t`.
 - Nous allons ensuite dire que nous voulons ordonner les tâches par ordre de création `t.created_at` (ce n'est pas obligatoire, mais ça permet de voir un autre paramètre que nous pouvons passer dans cette fonction).
-  > created_at est une propriété de l'entité tâche. C'est donc une des colonnes dans la base de données.
+    > created_at est une propriété de l'entité tâche. C'est donc une des colonnes dans la base de données.
 - Ensuite, nous calculons l'offset, c'est-à-dire, à partir de quelle tâche est ce que nous sommes sur la bonne page.
-  > pous ce faire, nous savons qu'il y a par exemple 10 tâches par page. si nous sommes sur la page 2, nous voulons donc commencer à la tâche n° 2 * 10 - 10 à savoir la tâche 10.
+    > pous ce faire, nous savons qu'il y a par exemple 10 tâches par page. si nous sommes sur la page 2, nous voulons donc commencer à la tâche n° 2 * 10 - 10 à savoir la tâche 10.
 - Vient ensuite la limit qui nous permet de savoir combien de tâches récupérer.
-  > pour poursuivre l'explication, nous allons donc récupérer les tâches 10 à 19.
-  > la première page permet de récupérer les tâches de 0 à 9. (c'est comme un array le premier éléments est à 0).
+    > pour poursuivre l'explication, nous allons donc récupérer les tâches 10 à 19.
+    > la première page permet de récupérer les tâches de 0 à 9. (c'est comme un array le premier éléments est à 0).
 - Enfin, nous avons la dernière ligne qui renvoie le résultat de l'opération afin de pouvoir le récupérer dans le controller.
 
 Justement. Du côté du controller, comment ça se passe ?
