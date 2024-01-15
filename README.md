@@ -20,8 +20,8 @@ C'est à dire que les utilisateurs du site pourront créer des tâches et indiqu
 ### 1) Créer une page dans le code
 
 -   Pour créer une nouvelle page, il faut vous rendre dans le controller correspondant.
-  -   S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
-  -   N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
+    -   S'il n'y a aucun controller correspondant, il vous faut le créer dans le dossier controller avec le bon namespace et le nom de classe qui correspond au nom du fichier.
+    -   N'oubliez pas d'étendre l'`AbstractController` afin d'avoir accès à toutes les fonctionnalités qu'il contient
 -   Une fois que vous êtes dans le bon controller, vous devez créer une nouvelle fonction en indiquant la route en annotation au dessus :
 
 ```php
@@ -126,7 +126,7 @@ Plusieurs questions vous seront ensuite posées afin de crée les propriétés d
 
 -   Vous allez commencer par choisir le nom de votre entité.
 -   Le maker vous demandera ensuite de renseigner les propriétés que doit contenir votre entité.
-  -   Vous commencez par le nom
+    -   Vous commencez par le nom
     -   :warning: **Il n'y a pas besoin de créer une propriété pour un id / une clé primaire, symfony le fait automatiquement**
   -   Ensuite il y a le type (`int`, `string`, `bool`...)
       > si vous ne savez pas quel type mettre, mettez un `?`, et la liste de tous les types disponibles apparaîtra.
